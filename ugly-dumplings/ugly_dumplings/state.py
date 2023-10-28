@@ -4,9 +4,23 @@ import reflex as rx
 
 
 class State(rx.State):
-    """Base state for the app.
+    """The app state."""
 
-    The base state is used to store general vars used throughout the app.
-    """
+    image_url = ""
+    image_processing = False
+    image_made = False
 
-    pass
+    def get_dalle_result(self, form_data: dict[str, str]):
+        prompt_text: str = form_data["prompt_text"]
+        self.image_made = False
+        self.image_processing = True
+        yield
+        try:
+            response = openai.Image.create(prompt=prompt_text, n=1, size="1024x1024")
+            self.image_url = response["data"][0]["url"]
+            self.image_processing = False
+            self.image_made = True
+            yield
+        except:
+            self.image_processing = False
+            yield rx.window_alert("Error with OpenAI Execution.")
