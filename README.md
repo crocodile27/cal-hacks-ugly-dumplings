@@ -1,6 +1,4 @@
-Certainly! Here's the README written in Markdown:
 
-```markdown
 # AI Recipe Generator
 
 ## Overview
